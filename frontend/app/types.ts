@@ -1,0 +1,13 @@
+export type Currency = 'BYN' | 'USD' | 'RUB';
+export type Family = {id:number; name:string; address:string; invite_url:string; started_on:string; paid_until:string; cost:string; currency:Currency; cost_months:number; account:number|null; notes:string; archived:boolean; member_count:number; days_left:number};
+export type PaidPeriodAdjustment = {id:number;service:'spotify'|'vpn';previous_until:string|null;paid_until:string;note:string;created_at:string};
+export type Member = {paid_period_adjustments:PaidPeriodAdjustment[];id:number; family:number; family_name:string; name:string; email:string; contact:string; is_owner:boolean; is_free:boolean; needs_vpn:boolean; joined_on:string; spotify_until:string|null; vpn_until:string|null; spotify_price:string; vpn_price:string; notes:string; active:boolean; has_password:boolean};
+export type Resource = {id:number; name:string; kind:'vps'|'proxy'; service_url:string; login:string; paid_until:string; cost:string; currency:Currency; cost_months:number; families:number[]; notes:string; has_password:boolean; days_left:number};
+export type Account = {id:number; name:string; number:string; instructions:string};
+export type Payment = {id:number; member:number; member_name:string; family:number; family_name:string; service:'spotify'|'vpn'; months:number; amount:string; paid_on:string; period_start:string; period_end:string; note:string; account_label:string; rate_snapshot:Record<string,string>};
+export type Expense = {id:number; label:string; amount:string; currency:Currency; paid_on:string; paid_until:string; note:string};
+export type Rate = {id:number; currency:Currency; byn_per_unit:string; source:string; updated_at:string};
+export type Forecast = {id:number; name:string; spotify_income:string|null; vpn_income:string|null; spotify_cost:string|null; vpn_cost:string|null; profit:string|null};
+export type Alert = {kind:string; label:string; date:string; days:number; id:number; family_id:number|null};
+export type Overview = {date:string; currency:Currency; alerts:Alert[]; forecast:Forecast[]; cash:{id:number;name:string;income:string|null;cost:string|null;balance:string|null}[]; rates:Record<string,string>; totals:{income:string|null;cost:string|null;profit:string|null;vpn_income:string|null;vpn_cost:string|null;vpn_profit:string|null}; unallocated_resources:string[]};
+export type Data = {families:Family[];members:Member[];resources:Resource[];accounts:Account[];payments:Payment[];expenses:Expense[];rates:Rate[];overview:Overview};

@@ -1,0 +1,25 @@
+.env
+.env.telegram
+.deploy/
+.venv/
+__pycache__/
+*.pyc
+*.sqlite3
+.next/
+node_modules/
+*.log
+test-results/
+*.tsbuildinfo
+# Private deployment configuration and diagnostics
+.env.*
+!.env.example
+DEPLOYMENT.md
+deploy/
+scripts/*
+!scripts/init_local.py
+!scripts/start-local.ps1
+frontend/tests/server-smoke.mjs
+audit-*.json
+*.dump
+*.bak
+backups/

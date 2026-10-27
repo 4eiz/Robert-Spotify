@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-family_ledger}
+      POSTGRES_USER: ${POSTGRES_USER:-family_ledger}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  migrate:
+    build: ./backend
+    image: robert-spotify-backend:local
+    env_file: .env
+    environment: &backend_env
+      DEBUG: '0'
+      LOCAL_DEV_LOGIN: '0'
+      DATABASE_URL: postgresql://${POSTGRES_USER:-family_ledger}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-family_ledger}
+    command: python manage.py migrate --noinput
+    depends_on:
+      db:
+        condition: service_healthy
+  backend:
+    build: ./backend
+    image: robert-spotify-backend:local
+    env_file: .env
+    environment: *backend_env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  reminders:
+    build: ./backend
+    image: robert-spotify-backend:local
+    env_file: .env
+    environment: *backend_env
+    command: python manage.py send_reminders
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+  frontend:
+    build: ./frontend
+    ports:
+      - '127.0.0.1:${FRONTEND_PORT:-3000}:3000'
+    depends_on:
+      - backend
+    restart: unless-stopped
+volumes:
+  postgres_data:

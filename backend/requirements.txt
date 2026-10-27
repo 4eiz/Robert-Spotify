@@ -1,0 +1,11 @@
+Django>=5.2,<5.3
+djangorestframework>=3.18.2,<3.19
+psycopg[binary]>=3.2,<4
+dj-database-url>=2.3,<4
+python-dotenv>=1.0,<2
+cryptography>=50,<51
+PyJWT[crypto]>=2.10,<3
+requests>=2.32,<3
+beautifulsoup4>=4.13,<5
+python-dateutil>=2.9,<3
+gunicorn>=23,<24
